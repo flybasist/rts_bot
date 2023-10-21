@@ -1,3 +1,0 @@
-import telegrambot
-
-telegrambot.runbot()
