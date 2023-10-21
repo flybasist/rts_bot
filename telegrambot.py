@@ -31,7 +31,7 @@ def send_text(message):
     timedelta = systemtime - datetime.timedelta(days=1)
     date_message = systemtime.strftime('%Y-%m-%d %H:%M:%S')
     delta_message = timedelta.strftime('%Y-%m-%d %H:%M:%S')
-#    sql.clearbase(delta_message)
+    sql.clearbase(delta_message)
     reaction.reaction(chatid, userid, username, messageid, contenttype, text, caption, checkvip, vacuumcleaner, violation, date_message, delta_message, bot, sql, checkmessages)
 
 def runbot():

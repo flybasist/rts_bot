@@ -39,11 +39,12 @@ def checkbase():
         if (sqlite_connection):
             sqlite_connection.close()
             
-def clearbase(deltatime):
-        sqlite_connection = sqlite3.connect(namebase)
-        cursor = sqlite_connection.cursor()
-        cursor.execute("DELETE FROM tg WHERE date_message < ?;", (deltatime))
-        sqlite_connection.close()    
+def clearbase(delta_message):
+    sqlite_connection = sqlite3.connect(namebase)
+    cursor = sqlite_connection.cursor()
+    cursor.execute("DELETE FROM tg WHERE date_message < ? ;", (delta_message, ))
+    cursor.connection.commit()
+    sqlite_connection.close()    
 
 def basewrite(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message):
     sqlite_connection = sqlite3.connect(namebase)
