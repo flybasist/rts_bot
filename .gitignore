@@ -2,3 +2,4 @@
 settings.ini
 *.log
 *.db
+/__pycache__
