@@ -41,9 +41,9 @@ def reaction(chatid, userid, username, messageid, contenttype, text, caption, ch
             pass
 
     elif checkvip <= 99 and contenttype == 'photo':
+        violation = checkmessages.checkcaption(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message, bot)
         if vacuumcleaner == 1:
             checkvip = vacuumcleaner
-            violation = checkmessages.checkcaption(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message, bot)
             sql.basewrite(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message)
             count = sql.basecountvacuumcleaner(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message, delta_message)
             if count == 1:
@@ -51,6 +51,8 @@ def reaction(chatid, userid, username, messageid, contenttype, text, caption, ch
                 bot.send_message(chatid, answer)
             else:
                 pass
+        else:
+            sql.basewrite(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message)
         if violation == 1:
             count = sql.basecounttext(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message, delta_message)
             if count <= 3:
