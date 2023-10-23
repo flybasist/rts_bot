@@ -152,3 +152,12 @@ def reaction(chatid, userid, username, messageid, contenttype, text, caption, ch
         # answer = "I kill you!"
         # bot.send_message(chatid, answer)
         pass
+    
+def reactionstatistics(chatid, userid, username, messageid, contenttype, text, caption, checkvip, vacuumcleaner, violation, date_message, delta_message, bot, sql, checkmessages, countsticker, countanimation, countvoice, countvideonote, countext):
+    sql.basewrite(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message)
+    answer = "Дорогой @ " + username + " за сутки ты накопил - " + str(countsticker) + " стикеров, " + str(countanimation) + " GIFок, " + str(countvoice) + " скинутых (и скорее всего уничтоженных мною!) голосовух, " + str(countvideonote) + " скинутых (и опять же скорее всего уничтоженных мною) кружочков. А так же " + str(countext) + " текстовых нарушений"
+    bot.send_message(chatid, answer)
+
+def reactionversion(chatid, userid, username, messageid, contenttype, text, caption, checkvip, vacuumcleaner, violation, date_message, delta_message, bot, sql, checkmessages, version):
+    answer = "Текущая версия - " + version
+    bot.send_message(chatid, answer)
