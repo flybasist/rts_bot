@@ -46,7 +46,7 @@ def clearbase(delta_message):
     cursor.connection.commit()
     sqlite_connection.close()    
 
-def basewrite(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message):
+def basewrite(chatid, userid, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner):
     sqlite_connection = sqlite3.connect(namebase)
     cursor = sqlite_connection.cursor()
     cursor.execute("INSERT INTO tg (chat_id, user_id, username, message_id, contenttype, text, caption, vip, violation, date_message) \
@@ -54,7 +54,7 @@ def basewrite(chatid, userid, username, messageid, contenttype, text, caption, c
     cursor.connection.commit()
     sqlite_connection.close()
 
-def basecount(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message, delta_message):
+def basecount(chatid, userid, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner):
     sqlite_connection = sqlite3.connect(namebase)
     cursor = sqlite_connection.cursor()
     cursor.execute("SELECT COUNT(*) FROM tg WHERE user_id=? AND chat_id=? AND contenttype=? AND date_message > ? ;", (userid, chatid, contenttype, delta_message))
@@ -63,7 +63,8 @@ def basecount(chatid, userid, username, messageid, contenttype, text, caption, c
     sqlite_connection.close()
     return count
 
-def basecounttext(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message, delta_message):
+def basecounttext(chatid, userid, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner):
+    violation = 1
     sqlite_connection = sqlite3.connect(namebase)
     cursor = sqlite_connection.cursor()
     cursor.execute("SELECT COUNT(*) FROM tg WHERE user_id=? AND chat_id=? AND violation=? AND date_message > ? ;", (userid, chatid, violation, delta_message))
@@ -72,7 +73,7 @@ def basecounttext(chatid, userid, username, messageid, contenttype, text, captio
     sqlite_connection.close()
     return countext
 
-def basecountvacuumcleaner(chatid, userid, username, messageid, contenttype, text, caption, checkvip, violation, date_message, delta_message):
+def basecountvacuumcleaner(chatid, userid, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner):
     sqlite_connection = sqlite3.connect(namebase)
     cursor = sqlite_connection.cursor()
     cursor.execute("SELECT COUNT(*) FROM tg WHERE user_id=? AND chat_id=? AND vip=? AND contenttype=? AND date_message > ? ;", (userid, chatid, checkvip, contenttype, delta_message))
