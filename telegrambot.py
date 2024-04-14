@@ -6,8 +6,10 @@ import reaction
 import db
 import userstatistics
 import vip
+import scheduletask
+from threading import Thread
 
-version = ("0.3.1")
+version = ("0.3.2")
 
 idbot = settings.id_bot()
 bot = telebot.TeleBot(idbot)
@@ -50,6 +52,13 @@ def send_text(message):
     db.clearbase(delta_message)
     reaction.reaction(chatid, userid, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
     
-def runbot():
+def runpolling():
     db.checkbase()
     bot.polling()
+        
+def runbot():
+    thread1 = Thread(target=scheduletask.schedulesticker, args=())
+    thread2 = Thread(target=runpolling, args=())
+
+    thread1.start()
+    thread2.start()

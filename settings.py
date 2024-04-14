@@ -39,3 +39,14 @@ def namelog():
     config.read("settings.ini")  # читаем конфиг
     namelog = config["namelog"]["namelog"]
     return namelog
+
+def chatforpostal():
+    config = configparser.ConfigParser()  # создаём объекта парсера
+    config.read("settings.ini")  # читаем конфиг
+    chatforpostal = config["chatforpostal"]["chatforpostal"]
+    try:
+        chatforpostal = chatforpostal.split(',')
+        chatforpostal = list(map(int,chatforpostal))
+    except:
+        pass
+    return chatforpostal
