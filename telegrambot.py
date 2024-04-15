@@ -9,7 +9,7 @@ import vip
 import scheduletask
 from threading import Thread
 
-version = ("0.3.2")
+version = ("0.3.3")
 
 idbot = settings.id_bot()
 bot = telebot.TeleBot(idbot)
