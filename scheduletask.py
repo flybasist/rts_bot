@@ -1,4 +1,3 @@
-import time
 import schedule
 import settings
 import telebot
@@ -36,6 +35,4 @@ def schedulesticker():
     schedule.every().thursday.at("09:00").do(postalthursday, chatid=chatid)
     schedule.every().friday.at("09:00").do(postalfriday, chatid=chatid)
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    schedule.run_pending()
