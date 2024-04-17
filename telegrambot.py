@@ -8,10 +8,11 @@ import reaction
 import db
 import userstatistics
 import vip
+import schedule
 import scheduletask
 import threading
 
-version = ("0.4 beta1")
+version = ("0.4 beta2")
 
 crash = 0
 
@@ -71,11 +72,20 @@ def runpolling():
         print(traceback.format_exc())
         crash = 1
 
-def schedule():
+def schedules():
     global crash
-    while crash == 0:
+    
+    chatid = settings.chatforpostal()
+    
+    schedule.every().monday.at("09:00").do(scheduletask.postalmonday, chatid=chatid)
+    schedule.every().tuesday.at("09:00").do(scheduletask.postaltuesday, chatid=chatid)
+    schedule.every().wednesday.at("09:00").do(scheduletask.postalwednesday, chatid=chatid)
+    schedule.every().thursday.at("09:00").do(scheduletask.postalthursday, chatid=chatid)
+    schedule.every().friday.at("09:00").do(scheduletask.postalfriday, chatid=chatid)
+    
+    while crash == 0:  
         try:        
-            scheduletask.schedulesticker()
+            schedule.run_pending()
             time.sleep(1)
         except:
             print(traceback.format_exc())
@@ -84,7 +94,7 @@ def schedule():
 def runbot():
 
     thread1 = threading.Thread(target=runpolling, args=())
-    thread2 = threading.Thread(target=schedule, args=())
+    thread2 = threading.Thread(target=schedules, args=())
 
     thread1.start()
     thread2.start()

@@ -1,9 +1,7 @@
-import schedule
 import settings
 import telebot
 
 idbot = settings.id_bot()
-chatid = settings.chatforpostal()
 
 bot = telebot.TeleBot(idbot)
     
@@ -26,13 +24,3 @@ def postalthursday(chatid):
 def postalfriday(chatid):
     for x in chatid:
         bot.send_sticker(x, 'CAACAgIAAxkBAAIFpGYcFmGkRRv1DdW9YwFnPcoiwbIqAAKlAAOuzWgK9wUq3Hjbq6c0BA')
-
-def schedulesticker():
-    
-    schedule.every().monday.at("09:00").do(postalmonday, chatid=chatid)
-    schedule.every().tuesday.at("09:00").do(postaltuesday, chatid=chatid)
-    schedule.every().wednesday.at("09:00").do(postalwednesday, chatid=chatid)
-    schedule.every().thursday.at("09:00").do(postalthursday, chatid=chatid)
-    schedule.every().friday.at("09:00").do(postalfriday, chatid=chatid)
-
-    schedule.run_pending()
