@@ -12,7 +12,7 @@ import schedule
 import scheduletask
 import threading
 
-version = ("0.4 beta2")
+version = ("0.4 beta3")
 
 crash = 0
 
@@ -70,6 +70,7 @@ def runpolling():
         bot.polling()
     except:
         print(traceback.format_exc())
+    finally:
         crash = 1
 
 def schedules():
