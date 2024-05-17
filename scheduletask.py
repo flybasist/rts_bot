@@ -1,9 +1,17 @@
 import settings
 import telebot
+import schedule
 
 idbot = settings.id_bot()
 
 bot = telebot.TeleBot(idbot)
+
+def schedulesettins(chatid):
+    schedule.every().monday.at("09:00").do(postalmonday, chatid=chatid)
+    schedule.every().tuesday.at("09:00").do(postaltuesday, chatid=chatid)
+    schedule.every().wednesday.at("09:00").do(postalwednesday, chatid=chatid)
+    schedule.every().thursday.at("09:00").do(postalthursday, chatid=chatid)
+    schedule.every().friday.at("09:00").do(postalfriday, chatid=chatid)
     
 def postalmonday(chatid):
     for x in chatid:

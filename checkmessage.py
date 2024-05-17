@@ -1,11 +1,26 @@
 import re
 import settings
+import db
 import telebot
 
 idbot = settings.id_bot()
 bot = telebot.TeleBot(idbot)
 
-def basecheck(chatid, check, violation):
+def botcheck(variablesdict, text, violation):
+    variablesdict["userid"] = variablesdict["useridbot"]
+    variablesdict["username"] = variablesdict["usernamebot"]
+    variablesdict["text"] = text
+    variablesdict["messageid"] = None
+    variablesdict["violation"] = violation
+    variablesdict["checkvip"] = 99
+    return variablesdict
+
+def basecheck(variablesdict, prefix):
+    if prefix == "text":
+        check = variablesdict["text"]
+    elif prefix == "caption":
+        check = variablesdict["caption"]
+
     if check == None:
         check = "empty"
         
@@ -14,20 +29,34 @@ def basecheck(chatid, check, violation):
     regidron = re.search(r'\bпохмелье\b', check.lower())
 
     if meowcheck != None:
-        violation = 1
+        variablesdict["violation"] = 1
+    else:
+        variablesdict["violation"] = 0
 
     if amiga != None:
-        bot.send_sticker(chatid, 'CAACAgIAAxkBAANSY9ZRtd8zISOHv1Q1ji_mCaEzhhYAAgQAA7dBYg-r1QPjDQNzSC0E')
+        variablesdictbot = botcheck(variablesdict, variablesdict["stickeramiga"], 51)
+        count = db.basecounttext(variablesdictbot, delta="deltamin_message")
+        if count:
+            pass
+        else:
+            bot.send_sticker(variablesdict["chatid"], variablesdict["stickeramiga"])
+            db.basewritebot(variablesdictbot)
+            
+    if regidron != None:
+        variablesdictbot = botcheck(variablesdict, variablesdict["stickersregidron"], 52)
+        count = db.basecounttext(variablesdictbot, delta="deltamin_message")
+        if count:
+            pass
+        else:
+            bot.send_sticker(variablesdict["chatid"], variablesdict["stickersregidron"])
+            db.basewritebot(variablesdictbot)
         
-    if regidron !=None:
-        bot.send_sticker(chatid, 'CAACAgIAAxkBAAIFQWYZxsE8tdgnQJheVs8fT8VyL9J6AAIIRAAC5efRSzB4d8SfqHljNAQ')
-        
-    return violation
+    return variablesdict
 
-def checktext(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner):
-    violation = basecheck(chatid, text, violation)       
-    return violation
+def checktext(variablesdict):
+    variablesdict = basecheck(variablesdict, prefix="text")      
+    return variablesdict
 
-def checkcaption(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner):
-    violation = basecheck(chatid, caption, violation)       
-    return violation
+def checkcaption(variablesdict):
+    variablesdict = basecheck(variablesdict, prefix="caption")     
+    return variablesdict

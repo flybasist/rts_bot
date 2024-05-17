@@ -7,183 +7,157 @@ import checkmessage
 idbot = settings.id_bot()
 bot = telebot.TeleBot(idbot)
 
-def reaction(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner):
-    if checkvip == 100 and contenttype == 'text':
-        violation = checkmessage.checktext(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip,
-                                           vacuumcleaner)
-        db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
+def wordcheck(variablesdict):
+    if variablesdict["violation"] == 1:
+        variablesdict["violation"] = 2
+        count = db.basecounttext(variablesdict)
+        if count:
+            try:
+                bot.delete_message(variablesdict["chatid"], variablesdict["messageid"], None)
+                variablesdict["violation"] = 3
+            except:
+                answer = "Возникли проблемы с удалением"
+                bot.send_message(variablesdict["chatid"], answer)
+        else:
+            variablesdict["violation"] = 1
+            count = db.basecounttext(variablesdict)
+            if count <= 3:
+                answer = "@" + variablesdict["username"] + "Гав!"
+                bot.send_message(variablesdict["chatid"], answer)
+            elif count == 4:
+                answer = "@" + variablesdict["username"] + " Следующий мяу последний, а после я начинаю их есть. Сутки"
+                bot.send_message(variablesdict["chatid"], answer)
+            elif count == 5:
+                variablesdict["violation"] = 2
+                answer = "@" + variablesdict["username"] + "Щелк зубами"
+                bot.send_message(variablesdict["chatid"], answer)                
+    else:
+        pass
+    return variablesdict
 
-    elif checkvip == 100 and contenttype == 'photo':
-        violation = checkmessage.checkcaption(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message,
-                                              checkvip, vacuumcleaner)
-        db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
+def vacuumcleanermessage(variablesdict):
+    if variablesdict["vacuumcleaner"] == 1:
+        variablesdict["checkvip"] = variablesdict["vacuumcleaner"]
+        count = db.basecountvacuumcleaner(variablesdict)
+        if count == 1:
+            answer = "@" + variablesdict["username"] + " , опять ты что то спылесосил"
+            bot.send_message(variablesdict["chatid"], answer)
+
+def reaction(variablesdict):
+    if variablesdict["checkvip"] == 100 and variablesdict["contenttype"] == 'text':
+        variablesdict = checkmessage.checktext(variablesdict)
+        db.basewrite(variablesdict)
+
+    elif variablesdict["checkvip"]== 100 and variablesdict["contenttype"] == 'photo':
+        variablesdict = checkmessage.checkcaption(variablesdict)
+        db.basewrite(variablesdict)
         
-    elif checkvip == 100:
-        db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
+    elif variablesdict["checkvip"]== 100:
+        db.basewrite(variablesdict)
 
-    elif checkvip <= 99 and contenttype == 'text':
-        violation = checkmessage.checktext(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip,
-                                           vacuumcleaner)
-        db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-        # if violation == 2:
-        #     try:
-        #         bot.delete_message(chatid, messageid, None)
-        #     except:
-        #         answer = "Возникли проблемы с удалением"
-        #         bot.send_message(chatid, answer)
-        if violation == 1:
-            count = db.basecounttext(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip,
-                                     vacuumcleaner)
-            if count <= 3:
-                answer = "Гав!"
-                bot.send_message(chatid, answer)
-            elif count == 4:
-                answer = "@" + username + " Следующий мяу последний, а после я начинаю их есть. Сутки"
-                bot.send_message(chatid, answer)
-            elif count == 5:
-                db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-                db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-                db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-                db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-                db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-                answer = "Щелк зубами"
-                bot.send_message(chatid, answer)
-            elif count >= 6:
-                try:
-                    bot.delete_message(chatid, messageid, None)
-                except:
-                    answer = "Возникли проблемы с удалением"
-                    bot.send_message(chatid, answer)                
-        else:
-            pass
+    elif variablesdict["checkvip"]<= 99 and variablesdict["contenttype"] == 'text':
+        variablesdict = checkmessage.checktext(variablesdict)
+        variablesdict = wordcheck(variablesdict)
+        db.basewrite(variablesdict)
 
-    elif checkvip <= 99 and contenttype == 'photo':
-        violation = checkmessage.checkcaption(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message,
-                                              checkvip, vacuumcleaner)
-        if vacuumcleaner == 1:
-            checkvip = vacuumcleaner
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-            count = db.basecountvacuumcleaner(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message,
-                                              checkvip, vacuumcleaner)
-            if count == 1:
-                answer = "@" + username + " , опять ты что то спылесосил"
-                bot.send_message(chatid, answer)
-            else:
-                pass
-        else:
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-        if violation == 1:
-            count = db.basecounttext(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip,
-                                     vacuumcleaner)
-            if count <= 3:
-                answer = "Гав!"
-                bot.send_message(chatid, answer)
-            elif count == 4:
-                answer = "@" + username + " Следующий мяу последний, а после я начинаю их есть. Сутки"
-                bot.send_message(chatid, answer)
-            elif count == 5:
-                db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-                db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-                db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-                db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-                db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-                answer = "Щелк зубами"
-                bot.send_message(chatid, answer)
-            elif count >= 6:
-                try:
-                    bot.delete_message(chatid, messageid, None)
-                except:
-                    answer = "Возникли проблемы с удалением"
-                    bot.send_message(chatid, answer)   
-        else:
-            pass
+    elif variablesdict["checkvip"]<= 99 and variablesdict["contenttype"] == 'photo':
+        vacuumcleanermessage(variablesdict)
+        variablesdict = checkmessage.checkcaption(variablesdict)
+        variablesdict = wordcheck(variablesdict)
+        db.basewrite(variablesdict)
 
-    elif checkvip <= 99 and contenttype == 'sticker':
-        db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-        count = db.basecount(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-        if count == 4:
-            answer = "@" + username + \
+    elif variablesdict["checkvip"]<= 99 and variablesdict["contenttype"] == 'sticker':
+        variablesdict["violation"] = 31
+        count = db.basecounttext(variablesdict)
+        if count:
+            try:
+                bot.delete_message(variablesdict["chatid"], variablesdict["messageid"], None)
+            except:
+                answer = "Возникли проблемы с удалением"
+                bot.send_message(variablesdict["chatid"], answer)
+        else:
+            variablesdict["violation"] = 0
+            count = db.basecount(variablesdict)
+            if count == 3:
+                answer = "@" + variablesdict["username"] + \
                 " В этом чате приветствуется классное, интересное, живое общение, а не стикершторм." + \
                     " За сутки от тебя прилетело уже четыре стикера. Давай пятый будет финальный, а дальше сутки придется страдать без них." + \
                     " Ну или юзай гифки если их лимит не исчерпан. А лучше фотки своих железок кидай(кота оставь в покое!), или трави кулстори!"
-            bot.send_message(chatid, answer)
-        elif count == 5:
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-        elif count >= 6:
+                bot.send_message(variablesdict["chatid"], answer)
+            elif count == 4:
+                variablesdict["violation"] = 31
+        db.basewrite(variablesdict)
+
+    elif variablesdict["checkvip"]<= 99 and variablesdict["contenttype"]== 'animation':
+        variablesdict["violation"] = 41
+        count = db.basecounttext(variablesdict)
+        if count:
             try:
-                bot.delete_message(chatid, messageid, None)
+                bot.delete_message(variablesdict["chatid"], variablesdict["messageid"], None)
             except:
                 answer = "Возникли проблемы с удалением"
-                bot.send_message(chatid, answer)
-
-    elif checkvip <= 99 and contenttype == 'animation':
-        db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-        count = db.basecount(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-        if count == 4:
-            answer = "@" + username + \
+                bot.send_message(variablesdict["chatid"], answer)
+        else:
+            variablesdict["violation"] = 0
+            count = db.basecount(variablesdict)
+            if count == 3:
+                answer = "@" + variablesdict["username"] + \
                 " В этом чате приветствуется классное, интересное, живое общение, а не гифшторм." + \
                     " За сутки от тебя прилетело уже четыре гифки. Давай пятая будет финальная, а дальше сутки придется страдать без них" + \
                     " Ну или юзай стикеры если их лимит не исчерпан. А лучше фотки своих железок кидай(кота оставь в покое!), или трави кулстори!"
-            bot.send_message(chatid, answer)
-        elif count == 5:
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-            db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-        elif count >= 6:
-            try:
-                bot.delete_message(chatid, messageid, None)
-            except:
-                answer = "Возникли проблемы с удалением"
-                bot.send_message(chatid, answer)
+                bot.send_message(variablesdict["chatid"], answer)
+            elif count == 4:
+                variablesdict["violation"] = 41
+        db.basewrite(variablesdict)
 
-    elif checkvip <= 99 and contenttype == 'voice':
-        db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-        answer = "Всем привет, я вижу что тут @" + username + " кинул ГС, здесь это запрещено, тут надо об играх писать"
-        bot.send_message(chatid, answer)
+    elif variablesdict["checkvip"]<= 99 and variablesdict["contenttype"]== 'voice':
+        db.basewrite(variablesdict)
+        answer = "Всем привет, я вижу что тут @" + variablesdict["username"] + " кинул ГС, здесь это запрещено, тут надо об играх писать"
+        bot.send_message(variablesdict["chatid"], answer)
         time.sleep(5)
         try:
-            bot.delete_message(chatid, messageid, None)
+            bot.delete_message(variablesdict["chatid"], variablesdict["messageid"], None)
             answer = "Никаких ГС в мою смену"
-            bot.send_message(chatid, answer)
+            bot.send_message(variablesdict["chatid"], answer)
         except:
             answer = "Видимо у меня нет прав на удаление"
-            bot.send_message(chatid, answer)
+            bot.send_message(variablesdict["chatid"], answer)
 
-    elif checkvip <= 99 and contenttype == 'video_note':
-        db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-        answer = "Всем привет, я вижу что тут @" + username + " кинул кружочек, здесь это запрещено, тут надо об играх писать"
-        bot.send_message(chatid, answer)
+    elif variablesdict["checkvip"]<= 99 and variablesdict["contenttype"]== 'video_note':
+        db.basewrite(variablesdict)
+        answer = "Всем привет, я вижу что тут @" + variablesdict["username"] + " кинул кружочек, здесь это запрещено, тут надо об играх писать"
+        bot.send_message(variablesdict["chatid"], answer)
         time.sleep(5)
         try:
-            bot.delete_message(chatid, messageid, None)
+            bot.delete_message(variablesdict["chatid"], variablesdict["messageid"], None)
             answer = "Никаких кружочков в мою смену"
-            bot.send_message(chatid, answer)
+            bot.send_message(variablesdict["chatid"], answer)
         except:
             answer = "Видимо у меня нет прав на удаление"
-            bot.send_message(chatid, answer)
+            bot.send_message(variablesdict["chatid"], answer)
     else:
-        # print (checkvip, "I kill you")
-        # answer = "I kill you!"
-        # bot.send_message(chatid, answer)
         pass
     
-def reactionstatistics(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner,
-                       countsticker, countanimation, countvoice, countvideonote, countext):
-    db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-    answer = "Дорогой @" + username + " за сутки ты накопил - " + str(countsticker) + " стикеров, " + str(countanimation) + " GIFок, " + str(countvoice) + \
-    " скинутых (и скорее всего уничтоженных мною!) голосовух, " + str(countvideonote) + " скинутых (и опять же скорее всего уничтоженных мною) кружочков. А так же " \
-        + str(countext) + " текстовых нарушений."
-        # + "\nВо избежании флуд шторма, индивидуальная статистика доступна не более одного раза в час"
-    bot.send_message(chatid, answer)
+def reactionversion(variablesdict):
+    variablesdict["violation"] = 11 
+    count = db.basecounttext(variablesdict, delta="deltahour_message")
+    db.basewrite(variablesdict)
+    if count and variablesdict["checkvip"] != 100:
+        pass
+    else:
+        answer = "Текущая версия - " + variablesdict["version"] + "\nПо всем вопросам писать автору бота - @FlyBasist" + \
+        "\nВо избежании флуд шторма, вызов номера версии доступно один раз в час. Индивидуальная реакция стикером на чаще одного раза в десять минут"
+        bot.send_message(variablesdict["chatid"], answer)
 
-def reactionversion(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner, version):
-    db.basewrite(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-    answer = "Текущая версия - " + version + "\nПо всем вопросам писать автору бота - @FlyBasist"
-    # + "\nВо избежании флуд шторма, вызов номера версии доступно не более раза в час"
-    bot.send_message(chatid, answer)
+def reactionstatistics(variablesdict):
+    variablesdict["violation"] = 21 
+    count = db.basecounttext(variablesdict, delta="deltahour_message")
+    db.basewrite(variablesdict)
+    if count and variablesdict["checkvip"] != 100:
+        pass
+    else:
+        answer = "@" + variablesdict["username"] + " за сутки ты накопил - " + str(variablesdict["countsticker"]) + " стикеров, " + str(variablesdict["countanimation"]) + \
+        " GIFок, " + str(variablesdict["countvoice"]) + " скинутых (и скорее всего уничтоженных мною!) голосовух, " + str(variablesdict["countvideonote"]) + \
+            " скинутых (и опять же скорее всего уничтоженных мною) кружочков. А так же " + str(variablesdict["countext"]) + " текстовых нарушений." + \
+            "\nВо избежании флуд шторма, индивидуальная статистика доступна один раз в час"
+        bot.send_message(variablesdict["chatid"], answer)

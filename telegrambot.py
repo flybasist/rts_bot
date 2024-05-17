@@ -8,11 +8,8 @@ import reaction
 import db
 import userstatistics
 import vip
-import schedule
 import scheduletask
 import threading
-
-version = ("0.4 beta3")
 
 crash = 0
 
@@ -20,48 +17,61 @@ idbot = settings.id_bot()
 bot = telebot.TeleBot(idbot)
 
 def variables(message):
-    contenttype = message.content_type
-    chatid = message.chat.id
-    userid = message.from_user.id
-    chatname = message.chat.username
-    chattitle = message.chat.title
-    username = message.from_user.username
-    messageid = message.message_id
-    text = message.text
-    caption = message.caption
-    violation = 0
-    systemtime = datetime.datetime.today()
-    timedelta = systemtime - datetime.timedelta(days=1)
+    variablesdict = {}
+    variablesdict["version"] = ("0.4")
+    variablesdict["namebase"] = settings.namebase()
+    variablesdict["contenttype"] = message.content_type
+    variablesdict["chatid"] = message.chat.id
+    variablesdict["userid"] = message.from_user.id
+    variablesdict["chatname"] = message.chat.username
+    variablesdict["chattitle"] = message.chat.title
+    variablesdict["username"] = message.from_user.username
+    variablesdict["messageid"] = message.message_id
+    variablesdict["text"] = message.text
+    variablesdict["caption"] = message.caption
+    variablesdict["violation"] = 0
+    systemtime = datetime.datetime.today()  
+    timedeltaday = systemtime - datetime.timedelta(days=1)
+    timedeltahour = systemtime - datetime.timedelta(hours=1)
+    timedeltamin = systemtime - datetime.timedelta(minutes=10)
     date_message = systemtime.strftime('%Y-%m-%d %H:%M:%S')
-    delta_message = timedelta.strftime('%Y-%m-%d %H:%M:%S')
+    deltaday_message = timedeltaday.strftime('%Y-%m-%d %H:%M:%S')
+    deltahour_message = timedeltahour.strftime('%Y-%m-%d %H:%M:%S')
+    deltamin_message = timedeltamin.strftime('%Y-%m-%d %H:%M:%S')
+    variablesdict["date_message"] = date_message
+    variablesdict["deltaday_message"] = deltaday_message
+    variablesdict["deltahour_message"] = deltahour_message
+    variablesdict["deltamin_message"] = deltamin_message
     checkvip = settings.vip_members()
     vacuumcleaner = settings.vacuumcleaner()
-    checkvip = vip.checkuser(userid, checkvip)
-    vacuumcleaner = vip.checkvacuumcleaner(userid, vacuumcleaner)
-    return(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
+    checkvip = vip.checkuser(message.from_user.id, checkvip)
+    variablesdict["checkvip"] = checkvip
+    vacuumcleaner = vip.checkvacuumcleaner(message.from_user.id, vacuumcleaner)
+    variablesdict["vacuumcleaner"] = vacuumcleaner
+    variablesdict["stickeramiga"] = settings.stickeramiga()
+    variablesdict["stickersregidron"] = settings.stickerregidron()
+    variablesdict["useridbot"] = settings.useridbot()
+    variablesdict["usernamebot"] = settings.usernamebot()
+    return(variablesdict)
 
 @bot.message_handler(commands=['version'])
 def start_message(message):
-    chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner = variables(message)
     log.logging.info (message)
-    log.logging.info ("")
-    reaction.reactionversion(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip,
-                             vacuumcleaner, version)
+    variablesdict = variables(message)
+    reaction.reactionversion(variablesdict)
     
 @bot.message_handler(commands=['statistics'])
 def start_message(message):
-    chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner = variables(message)
     log.logging.info (message)
-    log.logging.info ("")
-    userstatistics.statistics(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
+    variablesdict = variables(message)
+    userstatistics.statistics(variablesdict)
 
 @bot.message_handler(content_types=['audio', 'photo', 'voice', 'video', 'document', 'text', 'location', 'contact', 'sticker', 'animation', 'video_note'])
 def send_text(message):
     log.logging.info (message)
-    log.logging.info ("")
-    chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner = variables(message)
-    db.clearbase(delta_message)
-    reaction.reaction(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
+    variablesdict = variables(message)
+    db.clearbase(variablesdict)
+    reaction.reaction(variablesdict)
     
 def runpolling():
     global crash
@@ -77,25 +87,18 @@ def schedules():
     global crash
     
     chatid = settings.chatforpostal()
-    
-    schedule.every().monday.at("09:00").do(scheduletask.postalmonday, chatid=chatid)
-    schedule.every().tuesday.at("09:00").do(scheduletask.postaltuesday, chatid=chatid)
-    schedule.every().wednesday.at("09:00").do(scheduletask.postalwednesday, chatid=chatid)
-    schedule.every().thursday.at("09:00").do(scheduletask.postalthursday, chatid=chatid)
-    schedule.every().friday.at("09:00").do(scheduletask.postalfriday, chatid=chatid)
+    scheduletask.schedulesettins(chatid)
     
     while crash == 0:  
         try:        
-            schedule.run_pending()
+            scheduletask.schedule.run_pending()
             time.sleep(1)
         except:
             print(traceback.format_exc())
             crash = 1
 
 def runbot():
-
     thread1 = threading.Thread(target=runpolling, args=())
     thread2 = threading.Thread(target=schedules, args=())
-
     thread1.start()
     thread2.start()

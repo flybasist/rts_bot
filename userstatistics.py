@@ -1,18 +1,19 @@
 import reaction
 import db
 
-def statistics(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner):
+def statistics(variablesdict):
 
-    contenttype = ("sticker")
-    countsticker = db.basecount(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-    contenttype = ("animation")
-    countanimation = db.basecount(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-    contenttype = ("voice")
-    countvoice = db.basecount(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-    contenttype = ("video_note")
-    countvideonote = db.basecount(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
-    contenttype = ("text")
-    countext = db.basecounttext(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner)
+    variablesdict["contenttype"] = "sticker"
+    variablesdict["countsticker"] = db.basecount(variablesdict)
+    variablesdict["contenttype"] = "animation"
+    variablesdict["countanimation"] = db.basecount(variablesdict)
+    variablesdict["contenttype"] = "voice"
+    variablesdict["countvoice"] = db.basecount(variablesdict)
+    variablesdict["contenttype"] = "video_note"
+    variablesdict["countvideonote"] = db.basecount(variablesdict)
+    variablesdict["contenttype"] = "text"
+    variablesdict["violation"] = 1
+    variablesdict["countext"] = db.basecounttext(variablesdict)
+    variablesdict["violation"] = 0
 
-    reaction.reactionstatistics(chatid, userid, chatname, chattitle, username, messageid, contenttype, text, caption, violation, date_message, delta_message, checkvip, vacuumcleaner,
-                                countsticker, countanimation, countvoice, countvideonote, countext)
+    reaction.reactionstatistics(variablesdict)
