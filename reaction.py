@@ -146,7 +146,7 @@ def reactionversion(variablesdict):
         pass
     else:
         answer = "Текущая версия - " + variablesdict["version"] + "\nПо всем вопросам писать автору бота - @FlyBasist" + \
-        "\nВо избежании флуд шторма, вызов номера версии доступно один раз в час. Индивидуальная реакция стикером на чаще одного раза в десять минут"
+        "\nВо избежании флуд шторма, вызов номера версии доступно один раз в час. Индивидуальная реакция стикером не чаще одного раза в десять минут"
         bot.send_message(variablesdict["chatid"], answer)
 
 def reactionstatistics(variablesdict):
