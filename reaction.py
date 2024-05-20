@@ -22,14 +22,14 @@ def wordcheck(variablesdict):
             variablesdict["violation"] = 1
             count = db.basecounttext(variablesdict)
             if count <= 3:
-                answer = "@" + variablesdict["username"] + "Гав!"
+                answer = "@" + variablesdict["username"] + " Гав!"
                 bot.send_message(variablesdict["chatid"], answer)
             elif count == 4:
                 answer = "@" + variablesdict["username"] + " Следующий мяу последний, а после я начинаю их есть. Сутки"
                 bot.send_message(variablesdict["chatid"], answer)
             elif count == 5:
                 variablesdict["violation"] = 2
-                answer = "@" + variablesdict["username"] + "Щелк зубами"
+                answer = "@" + variablesdict["username"] + " Щелк зубами"
                 bot.send_message(variablesdict["chatid"], answer)                
     else:
         pass
