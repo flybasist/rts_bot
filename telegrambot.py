@@ -18,7 +18,7 @@ bot = telebot.TeleBot(idbot)
 
 def variables(message):
     variablesdict = {}
-    variablesdict["version"] = ("0.4")
+    variablesdict["version"] = ("0.4.1")
     variablesdict["namebase"] = settings.namebase()
     variablesdict["contenttype"] = message.content_type
     variablesdict["chatid"] = message.chat.id
@@ -30,15 +30,18 @@ def variables(message):
     variablesdict["text"] = message.text
     variablesdict["caption"] = message.caption
     variablesdict["violation"] = 0
-    systemtime = datetime.datetime.today()  
+    systemtime = datetime.datetime.today()
+    timedeltamonth = systemtime - datetime.timedelta(days=30)  
     timedeltaday = systemtime - datetime.timedelta(days=1)
     timedeltahour = systemtime - datetime.timedelta(hours=1)
     timedeltamin = systemtime - datetime.timedelta(minutes=10)
     date_message = systemtime.strftime('%Y-%m-%d %H:%M:%S')
+    deltamonth_message = timedeltamonth.strftime('%Y-%m-%d %H:%M:%S')
     deltaday_message = timedeltaday.strftime('%Y-%m-%d %H:%M:%S')
     deltahour_message = timedeltahour.strftime('%Y-%m-%d %H:%M:%S')
     deltamin_message = timedeltamin.strftime('%Y-%m-%d %H:%M:%S')
     variablesdict["date_message"] = date_message
+    variablesdict["deltamoth_message"] = deltamonth_message
     variablesdict["deltaday_message"] = deltaday_message
     variablesdict["deltahour_message"] = deltahour_message
     variablesdict["deltamin_message"] = deltamin_message

@@ -1,76 +1,73 @@
-import configparser
+import yaml
 
 def id_bot():
-    config = configparser.ConfigParser()  # создаём объекта парсера
-    config.read("settings.ini")  # читаем конфиг
-    idbot = config["idbot"]["idbot"]
+    with open("settings.yaml", "r") as f:
+        config = yaml.safe_load(f)
+        idbot = config["idbot"]["idbot"]
     return idbot
 
 def useridbot():
-    config = configparser.ConfigParser()  # создаём объекта парсера
-    config.read("settings.ini")  # читаем конфиг
-    useridbot = config["useridbot"]["useridbot"]
+    with open("settings.yaml", "r") as f:
+        config = yaml.safe_load(f)
+        useridbot = config["useridbot"]["useridbot"]
     return useridbot
 
 def usernamebot():
-    config = configparser.ConfigParser()  # создаём объекта парсера
-    config.read("settings.ini")  # читаем конфиг
-    usernamebot = config["usernamebot"]["usernamebot"]
+    with open("settings.yaml", "r") as f:
+        config = yaml.safe_load(f)
+        usernamebot = config["usernamebot"]["usernamebot"]
     return usernamebot
 
 def vip_members():
-    config = configparser.ConfigParser()  # создаём объекта парсера
-    config.read("settings.ini")  # читаем конфиг
-    vipuser = config["vip"]["vip"]
-    try:
-        vipuser = vipuser.split(',')
-        vipuser = list(map(int,vipuser))
-    except:
-        pass
+    with open("settings.yaml", "r") as f:
+        config = yaml.safe_load(f)
+        vipuser = config["vip"]["vip"]
+        try:
+            vipuser = list(map(int, vipuser.split(',')))
+        except:
+            pass
     return vipuser
 
 def vacuumcleaner():
-    config = configparser.ConfigParser()  # создаём объекта парсера
-    config.read("settings.ini")  # читаем конфиг
-    vacuumcleaner = config["vacuumcleaner"]["vacuumcleaner"]
-    try:
-        vacuumcleaner = vacuumcleaner.split(',')
-        vacuumcleaner = list(map(int,vacuumcleaner))
-    except:
-        pass
+    with open("settings.yaml", "r") as f:
+        config = yaml.safe_load(f)
+        vacuumcleaner = config["vacuumcleaner"]["vacuumcleaner"]
+        try:
+            vacuumcleaner = list(map(int, vacuumcleaner.split(',')))
+        except:
+            pass
     return vacuumcleaner
 
 def namebase():
-    config = configparser.ConfigParser()  # создаём объекта парсера
-    config.read("settings.ini")  # читаем конфиг
-    namebase = config["namebase"]["namebase"]
+    with open("settings.yaml", "r") as f:
+        config = yaml.safe_load(f)
+        namebase = config["namebase"]["namebase"]
     return namebase
 
 def namelog():
-    config = configparser.ConfigParser()  # создаём объекта парсера
-    config.read("settings.ini")  # читаем конфиг
-    namelog = config["namelog"]["namelog"]
+    with open("settings.yaml", "r") as f:
+        config = yaml.safe_load(f)
+        namelog = config["namelog"]["namelog"]
     return namelog
 
 def chatforpostal():
-    config = configparser.ConfigParser()  # создаём объекта парсера
-    config.read("settings.ini")  # читаем конфиг
-    chatforpostal = config["chatforpostal"]["chatforpostal"]
-    try:
-        chatforpostal = chatforpostal.split(',')
-        chatforpostal = list(map(int,chatforpostal))
-    except:
-        pass
+    with open("settings.yaml", "r") as f:
+        config = yaml.safe_load(f)
+        chatforpostal = config["chatforpostal"]["chatforpostal"]
+        try:
+            chatforpostal = list(map(int, chatforpostal.split(',')))
+        except:
+            pass
     return chatforpostal
 
 def stickeramiga():
-    config = configparser.ConfigParser()  # создаём объекта парсера
-    config.read("settings.ini")  # читаем конфиг
-    stickeramiga = config["stickers"]["stickeramiga"]
+    with open("settings.yaml", "r") as f:
+        config = yaml.safe_load(f)
+        stickeramiga = config["stickers"]["stickeramiga"]
     return stickeramiga
 
 def stickerregidron():
-    config = configparser.ConfigParser()  # создаём объекта парсера
-    config.read("settings.ini")  # читаем конфиг
-    stickerregidron = config["stickers"]["stickersregidron"]
+    with open("settings.yaml", "r") as f:
+        config = yaml.safe_load(f)
+        stickerregidron = config["stickers"]["stickersregidron"]
     return stickerregidron

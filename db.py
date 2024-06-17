@@ -44,7 +44,7 @@ def checkbase():
 def clearbase(variablesdict):
     sqlite_connection = sqlite3.connect(variablesdict["namebase"])
     cursor = sqlite_connection.cursor()
-    cursor.execute("DELETE FROM tg WHERE date_message < ? ;", (variablesdict["deltaday_message"], ))
+    cursor.execute("DELETE FROM tg WHERE date_message < ? ;", (variablesdict["deltamoth_message"], ))
     cursor.connection.commit()
     sqlite_connection.close()    
 

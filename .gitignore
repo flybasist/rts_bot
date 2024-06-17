@@ -1,5 +1,6 @@
 **/.DS_Store
-settings.ini
+settings.yaml
 *.log
 *.db
 /__pycache__
+/log

@@ -1,6 +1,6 @@
 # rts_bot
 RTS bot, python, telebot etc. 
 
-python3 ./flybasist_bot.py
+python3 ./bot.py
 
-version 0.4
+version 0.4.1

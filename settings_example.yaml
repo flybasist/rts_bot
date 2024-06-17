@@ -1,0 +1,27 @@
+idbot:
+  idbot: tokenbot
+
+useridbot:
+  useridbot: from tokenbot
+
+usernamebot:
+  usernamebot: username your bot
+
+vip:
+  vip: idusertelegram
+
+vacuumcleaner:
+  vacuumcleaner: iduserforjoke
+
+namebase:
+  namebase: rtsbot.db
+
+namelog:
+  namelog: flybasist_log.log
+
+chatforpostal:
+  chatforpostal: chatforsticker
+
+stickers:
+  stickeramiga: sticker for reaction amiga message
+  stickersregidron: sticker for reaction hangover message
