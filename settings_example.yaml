@@ -1,27 +1,19 @@
-idbot:
-  idbot: tokenbot
+idbot: tokenbot
 
-useridbot:
-  useridbot: from tokenbot
+useridbot: from tokenbot
 
-usernamebot:
-  usernamebot: username your bot
+usernamebot: username your bot
 
-vip:
-  vip: idusertelegram
+vip: idusertelegram
 
-vacuumcleaner:
-  vacuumcleaner: iduserforjoke
+vacuumcleaner: iduserforjoke
 
-namebase:
-  namebase: rtsbot.db
+namebase: rtsbot.db
 
-namelog:
-  namelog: flybasist_log.log
+namelog: flybasist_log.log
 
-chatforpostal:
-  chatforpostal: chatforsticker
+chatforpostal: chatforsticker
 
-stickers:
-  stickeramiga: sticker for reaction amiga message
-  stickersregidron: sticker for reaction hangover message
+stickeramiga: sticker for reaction amiga message
+
+stickersregidron: sticker for reaction hangover message
