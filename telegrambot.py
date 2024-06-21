@@ -18,7 +18,7 @@ bot = telebot.TeleBot(idbot)
 
 def variables(message):
     variablesdict = {}
-    variablesdict["version"] = ("0.4.1")
+    variablesdict["version"] = ("0.4.2")
     variablesdict["namebase"] = settings.namebase()
     variablesdict["contenttype"] = message.content_type
     variablesdict["chatid"] = message.chat.id
@@ -41,7 +41,7 @@ def variables(message):
     deltahour_message = timedeltahour.strftime('%Y-%m-%d %H:%M:%S')
     deltamin_message = timedeltamin.strftime('%Y-%m-%d %H:%M:%S')
     variablesdict["date_message"] = date_message
-    variablesdict["deltamoth_message"] = deltamonth_message
+    variablesdict["deltamonth_message"] = deltamonth_message
     variablesdict["deltaday_message"] = deltaday_message
     variablesdict["deltahour_message"] = deltahour_message
     variablesdict["deltamin_message"] = deltamin_message
@@ -76,6 +76,13 @@ def send_text(message):
     db.clearbase(variablesdict)
     reaction.reaction(variablesdict)
     
+@bot.edited_message_handler(func=lambda message: True)
+def handle_edited_message(message):
+    log.logging.info (message)
+    variablesdict = variables(message)
+    db.clearbase(variablesdict)
+    reaction.reaction(variablesdict)
+
 def runpolling():
     global crash
     try:
@@ -105,3 +112,4 @@ def runbot():
     thread2 = threading.Thread(target=schedules, args=())
     thread1.start()
     thread2.start()
+    
