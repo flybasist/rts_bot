@@ -18,7 +18,7 @@ bot = telebot.TeleBot(idbot)
 
 def variables(message):
     variablesdict = {}
-    variablesdict["version"] = ("0.4.2")
+    variablesdict["version"] = ("0.4.3")
     variablesdict["namebase"] = settings.namebase()
     variablesdict["contenttype"] = message.content_type
     variablesdict["chatid"] = message.chat.id
@@ -55,6 +55,10 @@ def variables(message):
     variablesdict["stickersregidron"] = settings.stickerregidron()
     variablesdict["useridbot"] = settings.useridbot()
     variablesdict["usernamebot"] = settings.usernamebot()
+    
+    if variablesdict["username"] == None:
+        variablesdict["username"] = "Empty"
+    
     return(variablesdict)
 
 @bot.message_handler(commands=['version'])
