@@ -24,7 +24,7 @@ def basecheck(variablesdict, prefix):
     if check == None:
         check = "empty"
         
-    meowcheck = re.search(r'\b[мm]\s*[яyaɑа]\s*[уuy]\w*\b', check.lower())
+    meowcheck = re.search(r'\b(?:[мmм]\s*([яyaɑа]|[aeiou])\s*([уuy]|[aeiou])|(?:meow|miau|мяу|мяў|мяв|miaw|mjaw|миау|μιου|مياو|먀우|ニャー))\b', check.lower())
     amiga = re.search(r'\bамига\b', check.lower())
     regidron = re.search(r'\bпохмелье\b', check.lower())
 

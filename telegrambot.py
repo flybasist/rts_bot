@@ -18,7 +18,7 @@ bot = telebot.TeleBot(idbot)
 
 def variables(message):
     variablesdict = {}
-    variablesdict["version"] = ("0.4.3")
+    variablesdict["version"] = ("0.4.4")
     variablesdict["namebase"] = settings.namebase()
     variablesdict["contenttype"] = message.content_type
     variablesdict["chatid"] = message.chat.id
