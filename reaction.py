@@ -31,6 +31,23 @@ def wordcheck(variablesdict):
                 variablesdict["violation"] = 2
                 answer = "@" + variablesdict["username"] + " Щелк зубами"
                 bot.send_message(variablesdict["chatid"], answer)                
+    elif variablesdict["violation"] == 4:
+        variablesdict["violation"] = 5
+        count = db.basecounttext(variablesdict)
+        if count:
+            try:
+                bot.delete_message(variablesdict["chatid"], variablesdict["messageid"], None)
+                variablesdict["violation"] = 6
+            except:
+                answer = "Возникли проблемы с удалением"
+                bot.send_message(variablesdict["chatid"], answer)
+        else:
+            variablesdict["violation"] = 4
+            count = db.basecounttext(variablesdict)
+            if count <= 1:
+                variablesdict["violation"] = 5
+                answer = "@" + variablesdict["username"] + " Извини, но это моя фишка"
+                bot.send_message(variablesdict["chatid"], answer)    
     else:
         pass
     return variablesdict

@@ -7,13 +7,15 @@ idbot = settings.id_bot()
 bot = telebot.TeleBot(idbot)
 
 def botcheck(variablesdict, text, violation):
-    variablesdict["userid"] = variablesdict["useridbot"]
-    variablesdict["username"] = variablesdict["usernamebot"]
-    variablesdict["text"] = text
-    variablesdict["messageid"] = None
+    variablesdictbot = variablesdict.copy()
+    variablesdictbot["userid"] = variablesdict["useridbot"]
+    variablesdictbot["username"] = variablesdict["usernamebot"]
+    variablesdictbot["text"] = text
+    variablesdictbot["messageid"] = None
+    variablesdictbot["violation"] = violation
     variablesdict["violation"] = violation
-    variablesdict["checkvip"] = 99
-    return variablesdict
+    variablesdictbot["checkvip"] = 99
+    return variablesdictbot
 
 def basecheck(variablesdict, prefix):
     if prefix == "text":
@@ -25,13 +27,17 @@ def basecheck(variablesdict, prefix):
         check = "empty"
         
     meowcheck = re.search(r'\b(?:[мmм]\s*([яyaɑа]|[aeiou])\s*([уuy]|[aeiou])|(?:meow|miau|мяу|мяў|мяв|miaw|mjaw|миау|μιου|مياو|먀우|ニャー))\b', check.lower())
+    gavcheck = re.search(r'\b(?:[гg]\s*([аa]+\s*[вv]+[!]*|[aeiou]+[!]*|(?:gav|гау|гав|гавв|гавкать|γαυ|قاو|갭|ガヴ)))\b', check.lower())    
     amiga = re.search(r'\bамига\b', check.lower())
     regidron = re.search(r'\bпохмелье\b', check.lower())
 
     if meowcheck != None:
         variablesdict["violation"] = 1
     else:
-        variablesdict["violation"] = 0
+        if gavcheck != None:
+            variablesdict["violation"] = 4
+        else:
+            variablesdict["violation"] = 0        
 
     if amiga != None:
         variablesdictbot = botcheck(variablesdict, variablesdict["stickeramiga"], 51)
