@@ -1,19 +1,5 @@
+typedb: sqlite
+
 idbot: tokenbot
 
-useridbot: from tokenbot
-
-usernamebot: username your bot
-
-vip: idusertelegram
-
-vacuumcleaner: iduserforjoke
-
-namebase: rtsbot.db
-
-namelog: flybasist_log.log
-
 chatforpostal: chatforsticker
-
-stickeramiga: sticker for reaction amiga message
-
-stickersregidron: sticker for reaction hangover message

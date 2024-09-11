@@ -2,6 +2,7 @@ import re
 import settings
 import db
 import telebot
+import reaction
 
 idbot = settings.id_bot()
 bot = telebot.TeleBot(idbot)
@@ -17,52 +18,47 @@ def botcheck(variablesdict, text, violation):
     variablesdictbot["checkvip"] = 99
     return variablesdictbot
 
-def basecheck(variablesdict, prefix):
-    if prefix == "text":
-        check = variablesdict["text"]
-    elif prefix == "caption":
-        check = variablesdict["caption"]
+def modesend(variablesdict, x):
+    if x[1] == "sticker":
+        bot.send_sticker(variablesdict["chatid"], x[3])
+    elif x[1] == "text":
+        bot.send_message(variablesdict["chatid"], x[3])
 
-    if check == None:
-        check = "empty"
-        
-    meowcheck = re.search(r'\b(?:[мmм]\s*([яyaɑа]|[aeiou])\s*([уuy]|[aeiou])|(?:meow|miau|мяу|мяў|мяв|miaw|mjaw|миау|μιου|مياو|먀우|ニャー))\b', check.lower())
-    gavcheck = re.search(r'\b(?:[гg]\s*([аa]+\s*[вv]+[!]*|[aeiou]+[!]*|(?:gav|гау|гав|гавв|гавкать|γαυ|قاو|갭|ガヴ)))\b', check.lower())    
-    amiga = re.search(r'\bамига\b', check.lower())
-    regidron = re.search(r'\bпохмелье\b', check.lower())
-
-    if meowcheck != None:
-        variablesdict["violation"] = 1
+def sendreaction(variablesdict, x, delta="deltahour_message"):
+    variablesdictbot = botcheck(variablesdict, x[3], x[4])
+    count = db.basecounttext(variablesdictbot, delta)
+    if count:
+        pass
     else:
-        if gavcheck != None:
-            variablesdict["violation"] = 4
+        modesend(variablesdict, x)
+        db.basewritebot(variablesdictbot)
+   
+def regextext(variablesdict, x):
+    regex = None
+    if variablesdict["caption"] != None:
+        regex = variablesdict["caption"]
+    elif variablesdict["text"] != None:
+        regex = variablesdict["text"]
+    if regex and x[2] != "disable":
+        regexcheck = re.search(x[2], regex.lower())
+    else:
+        regexcheck = None
+    if regexcheck and x[4] != 21:
+        sendreaction(variablesdict, x)
+        variablesdict["violation"] = x[4]
+    elif regexcheck and x[4] == 21:
+        countlimit = db.basecounttext(variablesdict, delta="deltaday_message", violation=x[4])
+        if countlimit >= variablesdict["limitviolation"] and variablesdict["limitviolation"] != 0 and variablesdict["checkvip"] != 100:
+            reaction.deletemessage(variablesdict)
+            variablesdict["violation"] = -1
+        elif countlimit + 2 == variablesdict["limitviolation"]:
+            countlimit = countlimit + 1
+            answer = "@" + variablesdict["username"] + " Ты набрал " + str(countlimit) + " из " + str(variablesdict["limitviolation"]) + " текстовых нарушений"
+            bot.send_message(variablesdict["chatid"], answer)
         else:
-            variablesdict["violation"] = 0        
-
-    if amiga != None:
-        variablesdictbot = botcheck(variablesdict, variablesdict["stickeramiga"], 51)
-        count = db.basecounttext(variablesdictbot, delta="deltamin_message")
-        if count:
-            pass
-        else:
-            bot.send_sticker(variablesdict["chatid"], variablesdict["stickeramiga"])
-            db.basewritebot(variablesdictbot)
-            
-    if regidron != None:
-        variablesdictbot = botcheck(variablesdict, variablesdict["stickersregidron"], 52)
-        count = db.basecounttext(variablesdictbot, delta="deltamin_message")
-        if count:
-            pass
-        else:
-            bot.send_sticker(variablesdict["chatid"], variablesdict["stickersregidron"])
-            db.basewritebot(variablesdictbot)
-        
-    return variablesdict
-
-def checktext(variablesdict):
-    variablesdict = basecheck(variablesdict, prefix="text")      
-    return variablesdict
-
-def checkcaption(variablesdict):
-    variablesdict = basecheck(variablesdict, prefix="caption")     
-    return variablesdict
+            modesend(variablesdict, x)
+        variablesdict["violation"] = x[4]
+    elif x[2] == "disable":
+        sendreaction(variablesdict, x, delta="deltaday_message")
+        variablesdict["violation"] = x[4]
+    return variablesdict 
