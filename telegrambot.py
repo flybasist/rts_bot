@@ -64,6 +64,7 @@ def handle_edited_message(message):
     logs.logging.info (message)
     variablesdict = variables.variables(message)
     db.clearbase(variablesdict)
+    variablesdict = variables.variableslimits(variablesdict)
     reaction.newmessage(variablesdict)
 
 def runpolling():
