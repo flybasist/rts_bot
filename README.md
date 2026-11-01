@@ -1,51 +1,55 @@
 # rts_bot
 
-## 🇷🇺 Описание
+Первый Telegram-бот автора, написанный на Python полностью вручную. **Проект закрыт и больше не развивается**:
+его заменил [BMFT](https://github.com/flybasist/bmft). Репозиторий остаётся как музейный экспонат.
 
-RTS bot — это телеграм-бот, написанный на Python с использованием библиотеки `telebot`.
+> ⚠️ **Статус: deprecated (архив).** Не используйте rts_bot в новых проектах. Для модерации чатов берите
+> [BMFT](https://github.com/flybasist/bmft): тот же замысел, но на Go и PostgreSQL, с настройкой кнопками.
 
-**Запуск:**
+## Как это работает
+
+Бот живёт в группах Telegram и делает несколько вещей:
+
+| Что | Как |
+|---|---|
+| Лимиты на сутки | на каждый тип сообщений (фото, стикеры, голосовые…): `-1` запрещено, `0` разрешено, число — сколько можно |
+| VIP | участник с признаком VIP лимитов не имеет |
+| Реакции | на слова и фразы (регулярные выражения) отвечает текстом или стикером |
+| Статистика | `/statistics` показывает, сколько человек потратил из своих лимитов; `/version` — версия бота |
+| Расписание | по будням в 9:00 отправляет стикеры в выбранные чаты |
+| Приветствие | здоровается с новыми участниками и с чатом, куда его добавили |
+
+Всё хранится в SQLite (`rtsbot.db`). Подробности и история — в [docs/](docs/README.md).
+
+## Что нужно
+
+- Python 3 и пакеты `pyTelegramBotAPI`, `PyYAML`, `schedule`
+- токен бота от [@BotFather](https://t.me/BotFather)
+
+## Установка и запуск
+
 ```bash
+pip install pyTelegramBotAPI PyYAML schedule
+cp settings_example.yaml settings.yaml   # впишите токен бота и номера чатов
 python3 ./bot.py
 ```
 
-**Версия:** 0.5
+## Важно
 
-## 🇺🇸 Description
+Лимиты и реакции в этой версии задаются прямо в базе SQLite, интерфейса настройки нет. Код сохранён в том виде,
+в каком он был в последней рабочей версии (0.5), и не обновляется: уязвимости не исправляются
+(см. [docs/SECURITY.md](docs/SECURITY.md)).
 
-RTS bot is a Telegram bot written in Python using the `telebot` library.
+## Документация
 
-**Run:**
-```bash
-python3 ./bot.py
-```
+Все подробности — в [docs/README.md](docs/README.md). Прощальное слово и история проекта — в [docs/HISTORY.md](docs/HISTORY.md).
+История изменений — в [CHANGELOG.md](CHANGELOG.md).
 
-**Version:** 0.5
+## Контакты
 
----
+Автор: Ognev Aleksandr (FlyBasist) — [github.com/flybasist](https://github.com/flybasist)
 
-## 🛡️ Лицензия / License
+## Лицензия
 
-### 🇷🇺 Русский
-
-Этот проект распространяется под лицензией [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.html).
-
-Вы можете использовать, модифицировать и распространять этот код, при условии, что производные работы также будут открыты под лицензией GPLv3. Это означает, что если вы вносите изменения и распространяете модифицированную версию, вы обязаны предоставить исходный код этих изменений.
-
-В случае использования кода **внутри организации** без его распространения — раскрытие изменений не требуется.
-
-Автор: **Alexander Ognev (aka FlyBasist)**  
-Год: **2025**
-
----
-
-### 🇺🇸 English
-
-This project is licensed under the [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.html).
-
-You may use, modify, and distribute this code, provided that derivative works are also released under GPLv3. This means that if you make changes and distribute the modified version, you must also provide the source code of your changes.
-
-If the code is used **within an organization only** and is not distributed — publishing changes is not required.
-
-Author: **Alexander Ognev (aka FlyBasist)**  
-Year: **2025**
+GNU General Public License v3.0 — см. [LICENSE](LICENSE). Сторонние компоненты
+и их условия перечислены в [docs/CREDITS.md](docs/CREDITS.md).
